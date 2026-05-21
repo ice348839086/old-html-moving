@@ -1,93 +1,93 @@
-# Old HTML Moving
+# 旧页面迁移
 
-Old HTML Moving is a small TrojanUI proof of concept: keep the legacy business logic, replace the visible page with a modern Shadow DOM interface, and compare it with a broken direct-HTML embedding baseline.
+这是一个 TrojanUI 概念验证项目：保留旧系统的业务函数，用现代界面接管页面可见部分，并用对照组展示普通直接插入方案为什么会被旧系统样式污染。
 
-The stack is intentionally boring: plain HTML, CSS, and JavaScript. No React, no Vue, no bundler, no install step.
+技术栈刻意保持极简：原生 HTML、CSS、JavaScript。没有 React，没有 Vue，没有打包工具，也不需要安装依赖。
 
-## What This Demonstrates
+## 这个项目验证什么
 
-This project answers one question:
+这个项目回答一个问题：
 
-> Can a modern UI safely take over an old internal HTML page without rewriting the old business functions?
+> 不重写旧业务函数，现代界面能不能安全接管一个老旧内网页面？
 
-The demo keeps the old `window.legacyApp.v1.*` functions alive, hides the ugly legacy DOM, mounts a new interface through Shadow DOM, and routes button clicks back into the old functions through an intent map.
+演示页面会保留旧的 `window.legacyApp.v1.*` 函数，隐藏丑陋的旧系统 DOM，通过影子 DOM 挂载新界面，并用意图路由表把按钮点击转发到旧系统函数。
 
-## Preview Pages
+## 预览页面
 
-Open `index.html` first. It is a landing page with three preview cards:
+建议先打开 `index.html`。它是三种预览入口的首页：
 
-| Preview | Page | What to Look For |
+| 预览 | 页面 | 观察重点 |
 | --- | --- | --- |
-| Preview 1 | `legacy_system.html?legacy=1` | The original old ERP page with table layout, SimSun font, brown text, and hostile global CSS. |
-| Preview 2 | `legacy_system.html` | The TrojanUI experiment. A modern dark UI takes over the page through Shadow DOM. |
-| Preview 3 | `experiment_control.html` | The control group. The same modern UI is injected with `innerHTML` and gets polluted by legacy CSS. |
+| 预览 1 | `legacy_system.html?legacy=1` | 原始旧 ERP 页面：表格布局、宋体、棕色文字、恶意全局样式。 |
+| 预览 2 | `legacy_system.html` | TrojanUI 实验组：现代深色界面通过影子 DOM 接管页面。 |
+| 预览 3 | `experiment_control.html` | 对照组：同一套现代界面直接插入旧页面，因此被旧系统样式污染。 |
 
-If this repository is served by GitHub Pages, the preview entry is:
+如果仓库开启了 GitHub Pages，预览入口是：
 
 ```text
 https://ice348839086.github.io/old-html-moving/
 ```
 
-For local testing:
+本地测试命令：
 
 ```bash
 python -m http.server 8765 --bind 127.0.0.1
 ```
 
-Then open:
+然后打开：
 
 ```text
 http://127.0.0.1:8765/
 ```
 
-## Files
+## 文件说明
 
-| File | Purpose |
+| 文件 | 用途 |
 | --- | --- |
-| `index.html` | Landing page with three visual preview entries. |
-| `legacy_system.html` | Main experiment page. Simulates an old intranet ERP with aggressive global CSS pollution. |
-| `hib_broker.js` | Hybrid Interface Broker. Hides the legacy DOM, mounts Shadow DOM, routes intent, and back-writes legacy state. |
-| `modern_ui.js` | Reusable modern UI template shared by the experiment and control pages. |
-| `modern_ui.css` | Dark-card modern UI stylesheet injected inside Shadow DOM. |
-| `experiment_control.html` | Control page. Injects the same modern UI through plain `innerHTML`, without Shadow DOM. |
+| `index.html` | 三个可视化预览入口首页。 |
+| `legacy_system.html` | 主实验页，模拟带有强全局样式污染的旧内网 ERP。 |
+| `hib_broker.js` | 混合界面中转器，负责隐藏旧 DOM、挂载影子 DOM、路由意图、回写状态。 |
+| `modern_ui.js` | 现代界面模板，实验组和对照组共用。 |
+| `modern_ui.css` | 深色卡片现代界面样式，在实验组中注入影子 DOM。 |
+| `experiment_control.html` | 对照组页面，不使用影子 DOM，直接插入同一套现代界面。 |
 
-## Test Flow
+## 测试流程
 
-1. Open `legacy_system.html?legacy=1`.
-2. Observe the original old ERP page. This is the baseline.
-3. Open `legacy_system.html`.
-4. Confirm that the dark modern UI is not affected by the legacy page's `SimSun` and `brown !important` global CSS.
-5. Enter a value in `Material code`, click `Query Stock`, and confirm that the legacy alert receives the new value.
-6. Click `Create Order` and confirm that the second legacy function is routed through the same broker.
-7. After each alert, check that `#modern-status`, `Last intent`, `Last value`, and `Last sync` update inside the modern UI.
-8. Open `experiment_control.html` and compare the polluted direct-embedding result.
+1. 打开 `legacy_system.html?legacy=1`。
+2. 观察原始旧 ERP 页面，这是基线。
+3. 打开 `legacy_system.html`。
+4. 确认深色现代界面没有受到旧页面 `SimSun` 和 `brown !important` 全局样式影响。
+5. 在物料编码输入框中输入一个值，点击“查询库存”，确认旧系统弹窗能收到这个新值。
+6. 点击“创建订单”，确认第二个旧系统函数也能通过同一个中转器被调用。
+7. 每次关闭弹窗后，查看状态区是否更新了“最近意图、最近输入值、最近同步”。
+8. 打开 `experiment_control.html`，对比直接插入方案被污染后的效果。
 
-## Why Three Pages
+## 为什么有三个页面
 
-The three pages are designed for quick visual comparison:
+三个页面用于快速视觉对比：
 
-- `legacy_system.html?legacy=1` shows what the old system looked like before takeover.
-- `legacy_system.html` shows the proposed Shadow DOM takeover.
-- `experiment_control.html` shows why plain `innerHTML` embedding is not enough.
+- `legacy_system.html?legacy=1` 展示接管前的旧系统。
+- `legacy_system.html` 展示影子 DOM 接管后的实验组。
+- `experiment_control.html` 展示为什么普通直接插入方案不够用。
 
-## Architecture
+## 架构
 
 ```mermaid
 flowchart LR
-  user[User] --> modernUi[Modern UI in Shadow DOM]
-  modernUi -->|"data-intent click"| hib[HIB Broker]
-  hib -->|"INTENT_MAP lookup"| legacyApi[Legacy API]
-  legacyApi -->|"CustomEvent legacy:response"| hib
-  hib -->|"local back-write"| modernUi
+  user[用户] --> modernUi[影子 DOM 中的现代界面]
+  modernUi -->|"点击 data-intent 按钮"| hib[混合界面中转器]
+  hib -->|"查询 INTENT_MAP"| legacyApi[旧系统函数]
+  legacyApi -->|"触发 legacy:response 事件"| hib
+  hib -->|"局部状态回写"| modernUi
 ```
 
-The important boundary is the Shadow DOM root created in `hib_broker.js`:
+关键边界来自 `hib_broker.js` 中创建的影子 DOM 根节点：
 
 ```javascript
 const shadowRoot = host.attachShadow({ mode: "open" });
 ```
 
-Because the modern interface lives inside that boundary, the legacy page-level CSS rule below cannot restyle its internal nodes:
+因为现代界面位于这个边界内部，旧页面下面这种全局样式无法改写现代界面内部节点：
 
 ```css
 * {
@@ -96,20 +96,20 @@ Because the modern interface lives inside that boundary, the legacy page-level C
 }
 ```
 
-## Implementation Notes
+## 实现要点
 
-### DOM Erasure
+### 旧 DOM 隐藏
 
-`hib_broker.js` hides the visual legacy application while leaving the JavaScript API available:
+`hib_broker.js` 会隐藏旧系统的可见界面，但保留旧系统 JavaScript 函数可调用：
 
 ```javascript
 legacyApp.setAttribute("aria-hidden", "true");
 legacyApp.style.display = "none";
 ```
 
-### Intent Routing Layer
+### 意图路由层
 
-The broker uses a routing table instead of hard-coded `if` branches:
+中转器使用路由表，而不是写死一堆 `if` 分支：
 
 ```javascript
 const INTENT_MAP = {
@@ -118,44 +118,44 @@ const INTENT_MAP = {
 };
 ```
 
-Buttons inside the modern UI declare their target through `data-intent`, then the broker reflects that intent into the matching legacy function.
+现代界面内部按钮通过 `data-intent` 声明目标意图，中转器再把这个意图反射调用到对应旧系统函数。
 
-### Bidirectional State Sync
+### 双向状态同步
 
-Legacy functions emit a response event after finishing:
+旧系统函数执行完成后会发出响应事件：
 
 ```javascript
 window.dispatchEvent(new CustomEvent("legacy:response", { detail }));
 ```
 
-The broker listens to that event and updates only the modern UI status area inside the Shadow DOM.
+中转器监听这个事件，只更新影子 DOM 内部的现代界面状态区。
 
-## Evaluation Screenshots
+## 论文截图素材
 
-Capture these screenshots for the paper:
+建议为论文截取以下图片：
 
-| Screenshot | File / Action | Suggested Chapter |
+| 截图 | 文件 / 操作 | 建议章节 |
 | --- | --- | --- |
-| Original old interface | Open `legacy_system.html?legacy=1` | Chapter 1: Introduction |
-| TrojanUI takeover result | Open `legacy_system.html` | Chapter 4: Implementation |
-| Open Shadow DOM tree | DevTools -> Elements -> `#hib-root` -> `#shadow-root (open)` | Chapter 3: Architecture |
-| Control group pollution | Open `experiment_control.html` | Chapter 5: Evaluation |
-| Experiment group isolation | Open `legacy_system.html` next to the control page | Chapter 5: Evaluation |
+| 原始旧界面 | 打开 `legacy_system.html?legacy=1` | 第 1 章：引言 |
+| TrojanUI 接管效果 | 打开 `legacy_system.html` | 第 4 章：系统实现 |
+| 影子 DOM 树结构 | 开发者工具 -> 元素 -> `#hib-root` -> `#shadow-root (open)` | 第 3 章：系统架构 |
+| 对照组污染效果 | 打开 `experiment_control.html` | 第 5 章：实验评估 |
+| 实验组隔离效果 | 将 `legacy_system.html` 与对照组并排比较 | 第 5 章：实验评估 |
 
-## Paper Mapping
+## 论文映射
 
-| Code artifact | Paper section |
+| 代码产物 | 论文章节 |
 | --- | --- |
-| `legacy_system.html` | 3.1 Legacy System Model |
-| `hib_broker.js` | 3.2 HIB Architecture |
-| `INTENT_MAP` | 3.3 Intent Routing Layer |
-| `legacy:response` event handling | 3.4 Bidirectional State Sync |
-| `experiment_control.html` | 5.1 Comparative Experiment |
+| `legacy_system.html` | 3.1 旧系统模型 |
+| `hib_broker.js` | 3.2 中转器架构 |
+| `INTENT_MAP` | 3.3 意图路由层 |
+| `legacy:response` 事件处理 | 3.4 双向状态同步 |
+| `experiment_control.html` | 5.1 对比实验 |
 
-## Suggested Evaluation Claim
+## 可写入论文的实验结论
 
-Use the control page as the baseline and the Shadow DOM page as the experimental group:
+可以把对照组作为基线，把影子 DOM 页面作为实验组：
 
-> Under hostile global CSS pollution, direct `innerHTML` embedding inherits the legacy system's forced font and color rules, while the Shadow DOM-based TrojanUI interface preserves its intended typography, color, layout, and component hierarchy.
+> 在恶意全局样式污染下，直接插入 HTML 的方案会继承旧系统强制字体和颜色规则；而基于影子 DOM 的 TrojanUI 方案可以保持预期的字体、颜色、布局和组件层级。
 
-For a stronger quantitative section, repeat the comparison with 10 hostile global CSS rules and record the percentage of visible component breakage in the control and experimental groups.
+如果要写成更强的定量实验，可以准备 10 组恶意全局样式，分别记录对照组和实验组中可见组件被破坏的比例。

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Legacy ERP 4.2 - TrojanUI PoC Target</title>
+  <title>旧版 ERP 4.2 - TrojanUI 概念验证目标页</title>
   <style>
     * {
       font-family: "SimSun", serif !important;
@@ -127,7 +127,7 @@
           <div class="legacy-panel">
             <h2>订单创建</h2>
             <label for="legacy-order-input">订单名称：</label>
-            <input id="legacy-order-input" value="Manual Order">
+            <input id="legacy-order-input" value="手工订单">
             <button onclick="window.legacyApp.v1.legacyOrderAction(document.getElementById('legacy-order-input').value)">创建订单</button>
           </div>
 
@@ -177,7 +177,7 @@
         v1: {
           legacyQueryAction: function legacyQueryAction(value) {
             var normalized = String(value || "").trim() || "EMPTY_QUERY";
-            var message = "Legacy inventory query accepted: " + normalized;
+            var message = "旧系统已接收库存查询：" + normalized;
             alert(message);
             emitLegacyResponse("inventory.query", normalized, message);
             return {
@@ -191,7 +191,7 @@
           legacyOrderAction: function legacyOrderAction(value) {
             var normalized = String(value || "").trim() || "UNTITLED_ORDER";
             var orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
-            var message = "Legacy order created: " + orderId + " / " + normalized;
+            var message = "旧系统订单已创建：" + orderId + " / " + normalized;
             alert(message);
             emitLegacyResponse("order.create", normalized, message);
             return {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Old HTML Moving - TrojanUI PoC</title>
+  <title>旧页面迁移 - TrojanUI 概念验证</title>
   <style>
     :root {
       color-scheme: dark;
@@ -59,9 +59,9 @@
     h1 {
       max-width: 820px;
       margin: 0 0 16px;
-      font-size: clamp(44px, 7vw, 86px);
-      line-height: 0.92;
-      letter-spacing: -0.08em;
+      font-size: clamp(40px, 6vw, 76px);
+      line-height: 1.08;
+      letter-spacing: -0.04em;
     }
 
     .lede {
@@ -125,7 +125,7 @@
     }
 
     .mock-control::after {
-      content: "SimSun + brown !important";
+      content: "宋体 + 棕色 !important";
       position: absolute;
       inset: 52px 28px auto;
       padding: 12px;
@@ -218,49 +218,49 @@
 <body>
   <main>
     <section class="hero">
-      <p class="eyebrow">Old HTML Moving / TrojanUI PoC</p>
-      <h1>Move an old internal page without rewriting its legacy logic.</h1>
+      <p class="eyebrow">旧页面迁移 / TrojanUI 概念验证</p>
+      <h1>不重写旧业务逻辑，也能迁移老内网页面。</h1>
       <p class="lede">
-        This demo shows three views of the same idea: the original legacy page, the Shadow DOM-based modern takeover, and a broken control group that uses plain innerHTML injection.
+        这个演示用三个页面展示同一个想法：原始旧系统、基于影子 DOM 的现代界面接管，以及直接插入 HTML 导致失败的对照组。
       </p>
     </section>
 
-    <section class="preview-grid" aria-label="Preview pages">
+    <section class="preview-grid" aria-label="预览页面">
       <a class="preview-card" href="legacy_system.html?legacy=1">
         <div class="mock mock-legacy" aria-hidden="true"></div>
         <div class="content">
-          <span class="tag warn">Preview 1</span>
-          <h2>Original Legacy UI</h2>
-          <p>Shows the ugly ERP-style table layout, global SimSun font, brown text, and hostile CSS pollution.</p>
+          <span class="tag warn">预览 1</span>
+          <h2>原始旧系统界面</h2>
+          <p>展示旧 ERP 风格的表格布局、全局宋体、棕色文字，以及恶意全局样式污染。</p>
         </div>
       </a>
 
       <a class="preview-card" href="legacy_system.html">
         <div class="mock mock-shadow" aria-hidden="true"></div>
         <div class="content">
-          <span class="tag success">Preview 2</span>
-          <h2>TrojanUI Experiment</h2>
-          <p>Mounts the modern dark-card interface inside Shadow DOM while routing intent back to legacy functions.</p>
+          <span class="tag success">预览 2</span>
+          <h2>TrojanUI 实验组</h2>
+          <p>把深色现代卡片界面挂载到影子 DOM 中，同时把用户意图路由回旧系统函数。</p>
         </div>
       </a>
 
       <a class="preview-card" href="experiment_control.html">
         <div class="mock mock-control" aria-hidden="true"></div>
         <div class="content">
-          <span class="tag">Preview 3</span>
-          <h2>innerHTML Control Group</h2>
-          <p>Uses direct DOM injection without Shadow DOM, so the modern UI is visibly contaminated by legacy CSS.</p>
+          <span class="tag">预览 3</span>
+          <h2>直接插入对照组</h2>
+          <p>不使用影子 DOM，直接把现代界面塞进旧页面，因此会被旧系统样式明显污染。</p>
         </div>
       </a>
     </section>
 
     <section class="steps">
-      <h2>Recommended Test Flow</h2>
+      <h2>推荐测试流程</h2>
       <ol>
-        <li>Open <code>Original Legacy UI</code> to see the baseline.</li>
-        <li>Open <code>TrojanUI Experiment</code>, click <code>Query Stock</code>, and confirm the legacy alert receives the modern input.</li>
-        <li>Check the bottom status panel for <code>legacy:response</code> back-writing.</li>
-        <li>Open <code>innerHTML Control Group</code> to compare the CSS pollution failure case.</li>
+        <li>打开 <code>原始旧系统界面</code>，先看基线效果。</li>
+        <li>打开 <code>TrojanUI 实验组</code>，点击 <code>查询库存</code>，确认旧系统弹窗能拿到现代输入框的值。</li>
+        <li>查看底部状态面板，确认 <code>legacy:response</code> 已经把旧系统结果回写到现代界面。</li>
+        <li>打开 <code>直接插入对照组</code>，对比没有影子 DOM 时的样式污染失败效果。</li>
       </ol>
     </section>
   </main>

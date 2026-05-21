@@ -70,9 +70,9 @@ p {
 h1 {
   max-width: 780px;
   margin-bottom: 14px;
-  font-size: clamp(42px, 6vw, 74px);
-  line-height: 0.94;
-  letter-spacing: -0.07em;
+  font-size: clamp(40px, 6vw, 72px);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
 }
 
 h2 {
