@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TrojanUI Control Experiment - No Shadow DOM</title>
+  <link rel="stylesheet" href="modern_ui.css">
+  <style>
+    * {
+      font-family: "SimSun", serif !important;
+      color: brown !important;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #b7b7b7;
+    }
+
+    .legacy-frame {
+      width: 960px;
+      margin: 18px auto;
+      padding: 18px;
+      border: 4px ridge #777;
+      background: #d6d0bd;
+      box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .legacy-frame h1 {
+      margin: 0 0 12px;
+      padding: 8px;
+      border: 2px inset #aaa;
+      background: #eee7d2;
+      text-align: center;
+    }
+
+    .legacy-note {
+      margin-bottom: 16px;
+      padding: 10px;
+      border: 2px dashed #9a2d00;
+      background: #f1d3a0;
+      font-weight: bold;
+    }
+
+    #control-mount {
+      border: 3px groove #aaa;
+      background: #eee7d2;
+    }
+  </style>
+</head>
+<body>
+  <div class="legacy-frame">
+    <h1>对照组 A：传统 innerHTML 嵌入</h1>
+    <div class="legacy-note">
+      本页故意不使用 Shadow DOM。现代 UI 被直接塞进旧系统 DOM，因此会被
+      <code>* { font-family: "SimSun" !important; color: brown !important; }</code>
+      污染。
+    </div>
+    <div id="control-mount"></div>
+  </div>
+
+  <script src="modern_ui.js"></script>
+  <script>
+    (function bootControlExperiment() {
+      const INTENT_MAP = {
+        "inventory.query": function legacyQueryAction(value) {
+          const normalized = String(value || "").trim() || "EMPTY_QUERY";
+          const message = "Control page legacy inventory query: " + normalized;
+          alert(message);
+          return message;
+        },
+        "order.create": function legacyOrderAction(value) {
+          const normalized = String(value || "").trim() || "UNTITLED_ORDER";
+          const orderId = "CTRL-" + Math.floor(100000 + Math.random() * 900000);
+          const message = "Control page legacy order created: " + orderId + " / " + normalized;
+          alert(message);
+          return message;
+        }
+      };
+
+      const mount = document.querySelector("#control-mount");
+      mount.innerHTML = window.TrojanUIModernUI.render({
+        mountedAt: new Date().toISOString(),
+        routeCount: Object.keys(INTENT_MAP).length
+      });
+
+      mount.addEventListener("click", function handleClick(event) {
+        const trigger = event.target.closest("[data-intent]");
+
+        if (!trigger) {
+          return;
+        }
+
+        const input = document.querySelector(trigger.getAttribute("data-input-target"));
+        const handler = INTENT_MAP[trigger.dataset.intent];
+        const status = document.querySelector("#modern-status");
+
+        if (!handler) {
+          status.dataset.state = "error";
+          status.textContent = "No control route for " + trigger.dataset.intent;
+          return;
+        }
+
+        const message = handler(input ? input.value : "");
+        status.dataset.state = "success";
+        status.textContent = "Control route finished: " + message;
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Legacy ERP 4.2 - TrojanUI PoC Target</title>
+  <style>
+    * {
+      font-family: "SimSun", serif !important;
+      color: brown !important;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #b7b7b7;
+      background-image:
+        linear-gradient(45deg, rgba(255, 255, 255, 0.22) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(255, 255, 255, 0.22) 25%, transparent 25%);
+      background-size: 18px 18px;
+    }
+
+    table {
+      border-collapse: collapse;
+    }
+
+    input,
+    select,
+    button {
+      border: 2px inset #ddd;
+      background: #eee;
+      padding: 3px 5px;
+    }
+
+    .legacy-shell {
+      width: 960px;
+      margin: 18px auto;
+      border: 4px ridge #777;
+      background: #d6d0bd;
+      box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .legacy-title {
+      background: linear-gradient(90deg, #050085, #7d7dcc);
+      padding: 8px 12px;
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-align: center;
+    }
+
+    .legacy-menu {
+      width: 170px;
+      vertical-align: top;
+      background: #c7c1ac;
+      border-right: 3px double #888;
+      padding: 12px;
+    }
+
+    .legacy-menu a {
+      display: block;
+      margin: 0 0 8px;
+      padding: 6px;
+      border: 1px solid #888;
+      background: #ded8c4;
+      text-decoration: underline;
+    }
+
+    .legacy-content {
+      padding: 14px;
+      vertical-align: top;
+    }
+
+    .legacy-panel {
+      border: 3px groove #aaa;
+      background: #eee7d2;
+      padding: 12px;
+      margin-bottom: 14px;
+    }
+
+    .legacy-panel h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .legacy-grid {
+      width: 100%;
+      background: #f5edd8;
+    }
+
+    .legacy-grid th,
+    .legacy-grid td {
+      border: 1px solid #81745f;
+      padding: 6px;
+      text-align: left;
+    }
+
+    .warning-strip {
+      margin: 10px 0 0;
+      padding: 8px;
+      border: 2px dashed #9a2d00;
+      background: #f1d3a0;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div id="legacy-app" class="legacy-shell">
+    <div class="legacy-title">内部库存订单系统 ERP 4.2</div>
+    <table width="100%">
+      <tr>
+        <td class="legacy-menu">
+          <a href="#">库存查询</a>
+          <a href="#">订单录入</a>
+          <a href="#">供应商维护</a>
+          <a href="#">报表导出</a>
+          <a href="#">系统设置</a>
+        </td>
+        <td class="legacy-content">
+          <div class="legacy-panel">
+            <h2>库存查询</h2>
+            <label for="legacy-query-input">物料编码：</label>
+            <input id="legacy-query-input" value="SKU-LEGACY-001">
+            <button onclick="window.legacyApp.v1.legacyQueryAction(document.getElementById('legacy-query-input').value)">执行查询</button>
+          </div>
+
+          <div class="legacy-panel">
+            <h2>订单创建</h2>
+            <label for="legacy-order-input">订单名称：</label>
+            <input id="legacy-order-input" value="Manual Order">
+            <button onclick="window.legacyApp.v1.legacyOrderAction(document.getElementById('legacy-order-input').value)">创建订单</button>
+          </div>
+
+          <table class="legacy-grid">
+            <tr>
+              <th>物料</th>
+              <th>仓库</th>
+              <th>库存</th>
+              <th>状态</th>
+            </tr>
+            <tr>
+              <td>SKU-LEGACY-001</td>
+              <td>WH-A</td>
+              <td>128</td>
+              <td>可用</td>
+            </tr>
+            <tr>
+              <td>SKU-LEGACY-002</td>
+              <td>WH-B</td>
+              <td>12</td>
+              <td>预警</td>
+            </tr>
+          </table>
+
+          <div class="warning-strip">
+            全局样式污染已开启：所有元素强制 SimSun + brown !important。
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <script>
+    (function exposeLegacyApi() {
+      function emitLegacyResponse(intent, value, message) {
+        window.dispatchEvent(new CustomEvent("legacy:response", {
+          detail: {
+            intent: intent,
+            value: value,
+            message: message,
+            timestamp: new Date().toISOString()
+          }
+        }));
+      }
+
+      window.legacyApp = {
+        v1: {
+          legacyQueryAction: function legacyQueryAction(value) {
+            var normalized = String(value || "").trim() || "EMPTY_QUERY";
+            var message = "Legacy inventory query accepted: " + normalized;
+            alert(message);
+            emitLegacyResponse("inventory.query", normalized, message);
+            return {
+              ok: true,
+              intent: "inventory.query",
+              value: normalized,
+              message: message
+            };
+          },
+
+          legacyOrderAction: function legacyOrderAction(value) {
+            var normalized = String(value || "").trim() || "UNTITLED_ORDER";
+            var orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
+            var message = "Legacy order created: " + orderId + " / " + normalized;
+            alert(message);
+            emitLegacyResponse("order.create", normalized, message);
+            return {
+              ok: true,
+              intent: "order.create",
+              value: normalized,
+              orderId: orderId,
+              message: message
+            };
+          }
+        }
+      };
+    })();
+  </script>
+  <script src="modern_ui.js"></script>
+  <script src="hib_broker.js"></script>
+</body>
+</html>
